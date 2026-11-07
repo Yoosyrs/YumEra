@@ -361,6 +361,19 @@ CREATE TABLE IF NOT EXISTS portrait_projects (
   updated_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS video_projects (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  template TEXT DEFAULT 'celestial',
+  timeline TEXT NOT NULL,
+  duration INTEGER DEFAULT 0,
+  thumbnail TEXT,
+  visibility TEXT DEFAULT 'private',
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS notifications (
   id TEXT PRIMARY KEY,
   recipient_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
