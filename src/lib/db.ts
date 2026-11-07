@@ -396,6 +396,17 @@ CREATE TABLE IF NOT EXISTS notification_settings (
   updated_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS notification_tones (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  base_freq INTEGER DEFAULT 880,
+  waveform TEXT DEFAULT 'bell',
+  decay REAL DEFAULT 1.6,
+  sparkle INTEGER DEFAULT 3,
+  created_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS push_subscriptions (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
