@@ -225,7 +225,7 @@ export default function PortraitStudioPage() {
         }
         setSavedAt(new Date().toLocaleTimeString());
         await loadLibrary();
-        if (!options.silent) toast.push('Portrait saved to your library', 'success');
+        if (!options.silent) toast.push('Portrait saved to your library', 'info');
         return true;
       } catch (error) {
         toast.push(error instanceof Error ? error.message : 'Could not save portrait', 'error');
@@ -338,7 +338,7 @@ export default function PortraitStudioPage() {
       );
       if (!blob) throw new Error('Export failed');
       download(blob, `${(title || 'yumera-portrait').toLowerCase().replace(/\s+/g, '-')}.${format === 'png' ? 'png' : 'jpg'}`);
-      toast.push(`Exported ${size.label}`, 'success');
+      toast.push(`Exported ${size.label}`, 'info');
     } catch (error) {
       toast.push(error instanceof Error ? error.message : 'Export failed', 'error');
     } finally {
@@ -361,7 +361,7 @@ export default function PortraitStudioPage() {
       }
       const blob = gifBlob(width, height, frames);
       download(blob, `${(title || 'yumera-portrait').toLowerCase().replace(/\s+/g, '-')}.gif`);
-      toast.push('Animated GIF exported', 'success');
+      toast.push('Animated GIF exported', 'info');
     } catch (error) {
       toast.push(error instanceof Error ? error.message : 'GIF export failed', 'error');
     } finally {
@@ -381,7 +381,7 @@ export default function PortraitStudioPage() {
       form.append('file', new File([blob], 'portrait.png', { type: 'image/png' }));
       const uploaded = await api<{ url: string }>('/api/upload', { formData: form });
       await api('/api/auth/session', { method: 'PATCH', body: { [target]: uploaded.url } });
-      toast.push(target === 'avatarUrl' ? 'Profile picture updated' : 'Profile cover updated', 'success');
+      toast.push(target === 'avatarUrl' ? 'Profile picture updated' : 'Profile cover updated', 'info');
     } catch (error) {
       toast.push(error instanceof Error ? error.message : 'Could not update profile', 'error');
     } finally {
@@ -424,7 +424,7 @@ export default function PortraitStudioPage() {
           visibility: 'private',
         },
       });
-      toast.push('Portrait duplicated', 'success');
+      toast.push('Portrait duplicated', 'info');
       await loadLibrary();
     } catch (error) {
       toast.push(error instanceof Error ? error.message : 'Could not duplicate', 'error');
@@ -438,7 +438,7 @@ export default function PortraitStudioPage() {
         setDoc(null);
         setProjectId(null);
       }
-      toast.push('Project deleted', 'success');
+      toast.push('Project deleted', 'info');
       await loadLibrary();
     } catch (error) {
       toast.push(error instanceof Error ? error.message : 'Could not delete', 'error');
@@ -451,7 +451,7 @@ export default function PortraitStudioPage() {
       await api('/api/folders', { method: 'POST', body: { name: folderName.trim() } });
       setFolderName('');
       await loadLibrary();
-      toast.push('Folder created', 'success');
+      toast.push('Folder created', 'info');
     } catch (error) {
       toast.push(error instanceof Error ? error.message : 'Could not create folder', 'error');
     }
@@ -816,7 +816,9 @@ export default function PortraitStudioPage() {
       </div>
 
       {doc.mode === 'couple' && (
-        <Alert tone="info" message="Couple mode: place two figures or ornaments side by side, then add a date and a dedication in the text layers." />
+        <Alert kind="warn">
+          Couple mode: place two figures or ornaments side by side, then add a date and a dedication in the text layers.
+        </Alert>
       )}
       <p className="tiny muted">
         Want to share it? Export the PNG, then publish it in <Link href="/gallery" className="link">your gallery</Link> or
