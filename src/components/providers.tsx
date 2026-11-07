@@ -40,6 +40,8 @@ export function useToast() {
 /* ----------------------------- music player ---------------------- */
 
 export interface PlayingTrack {
+  /** Renders the audio lazily (YumEra Originals are synthesised in the browser). */
+  ensureAudio?: () => string;
   id: string;
   title: string;
   artist: string;
@@ -133,8 +135,20 @@ export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !track) return;
-    if (audio.src !== new URL(track.audioUrl, window.location.href).href) {
-      audio.src = track.audioUrl;
+    let source = track.audioUrl;
+    if (!source && track.ensureAudio) {
+      try {
+        source = track.ensureAudio();
+      } catch {
+        source = '';
+      }
+    }
+    if (!source) {
+      setPlaying(false);
+      return;
+    }
+    if (audio.src !== new URL(source, window.location.href).href) {
+      audio.src = source;
     }
     if (playing) void audio.play().catch(() => setPlaying(false));
   }, [track, playing]);
