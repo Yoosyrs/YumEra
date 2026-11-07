@@ -1,5 +1,5 @@
 import { ApiError, ok, optionalStr, oneOf, pageParams, readJson, requireUser, route } from '@/lib/api';
-import { get, now, run, uid } from '@/lib/db';
+import { all, get, now, run, uid } from '@/lib/db';
 import { isBlocked } from '@/lib/auth';
 import { notify } from '@/lib/notifications';
 
@@ -60,8 +60,6 @@ export const GET = route(async (req) => {
   const items = all(sql, ...args, limit, offset);
   return ok({ items, limit, offset });
 });
-
-import { all } from '@/lib/db';
 
 export const POST = route(async (req) => {
   const user = await requireUser();
