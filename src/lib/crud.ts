@@ -155,14 +155,13 @@ export function makeItem(cfg: CollectionConfig & { name?: string }) {
     const { id } = await ctx.params;
     const row = get<Record<string, unknown>>(`SELECT ${buildSelect(cfg)} FROM ${cfg.table} WHERE id = ?`, id);
     if (!row) throw new ApiError(404, `${label} not found`);
-    const isOwner = row[cfg.owner] === userIdOf(row, cfg);
+    const isOwner = row[cfg.owner] === user.id;
     if (!isOwner) {
       if (cfg.ownerOnly) throw new ApiError(403, `You cannot access this ${label}`);
       if (cfg.visibilityColumn && row[cfg.visibilityColumn] !== 'public') {
         throw new ApiError(403, `This ${label} is private`);
       }
     }
-    void user;
     return ok({ item: row });
   });
 
